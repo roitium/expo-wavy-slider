@@ -6,39 +6,23 @@ The native view is implemented with Jetpack Compose. High-frequency values can b
 
 ## Platform Support
 
-| Platform | Status          |
-| -------- | --------------- |
-| Android  | Supported       |
-| iOS      | Not implemented |
-| Web      | Not implemented |
+> [!WARNING]
+> This package is only supported on Android.
 
 ## Requirements
 
-- Expo Modules
+- Expo
 - React Native New Architecture
 - `react-native-worklets`
 - `react-native-reanimated`
 
-This package requires a development build or a prebuilt native app. It does not run in Expo Go.
+This package requires a development build. It does not run in Expo Go.
 
 ## Installation
 
 ```sh
 pnpm add expo-wavy-slider react-native-worklets react-native-reanimated
 ```
-
-`expo`, `react`, `react-native`, `react-native-worklets`, and `react-native-reanimated` are peer dependencies. They are resolved from your app so the native runtime stays aligned with the Expo SDK and React Native version you build with.
-
-## Example App
-
-This repository includes a standalone Expo example app:
-
-```sh
-cd packages/expo-wavy-slider/example
-pnpm android
-```
-
-The example renders a React-state slider, a Reanimated-driven slider, and an explicit `useNativeState` slider.
 
 ## Basic Usage
 
@@ -69,13 +53,13 @@ export function Example() {
 }
 ```
 
-Callback props must be worklet functions. Use `scheduleOnRN` when a callback needs to update React state or run other JS-thread work.
+_BTW, Callback props **must** be worklet functions._
 
 ## Reanimated Shared Values
 
 `progress`, `bufferedProgress`, `waveLength`, `waveHeight`, `waveVelocity`, `waveThickness`, and `trackThickness` accept Reanimated shared values.
 
-Internally the component creates an `ObservableState` and starts a Reanimated mapper with `startMapper()`. The mapper copies `sharedValue.value` into native state on the UI runtime, and `stopMapper()` is called when the component unmounts or the prop changes.
+So you can add cool animations to your slider.
 
 ```tsx
 import { WavySlider } from 'expo-wavy-slider'
@@ -140,9 +124,13 @@ export function AnimatedPlayerSlider({
 
 ## Native State
 
+> This concept is inspired by [ExpoUI's `useNativeState` hook](https://docs.expo.dev/versions/v56.0.0/sdk/ui/jetpack-compose/usenativestate/).
+>
+> And basically, all these codes were copied from ExpoUI repo : )
+
 `useNativeState(initialValue)` creates an Expo `SharedObject` backed by native state. On Android it is read by Compose as observable state, so assigning `state.value` from a worklet updates the native UI directly.
 
-You usually do not need this hook when you already have a Reanimated shared value, because `WavySlider` bridges shared values internally. Use `useNativeState` when another native module, callback, or worklet needs to own a value explicitly.
+You usually do not need this hook when you already have a Reanimated shared value, because `WavySlider` bridges shared values internally.
 
 ```tsx
 import { WavySlider, useNativeState } from 'expo-wavy-slider'
@@ -154,6 +142,7 @@ export function NativeStateExample() {
 	useEffect(() => {
 		progress.onChange = (value) => {
 			'worklet'
+			console.log(value)
 			// Runs on the native UI runtime whenever progress.value changes.
 		}
 
@@ -173,23 +162,6 @@ export function NativeStateExample() {
 		/>
 	)
 }
-```
-
-## Buffered Progress
-
-`bufferedValue` and `bufferedProgress` draw a buffered track between the current value and the buffered value.
-
-```tsx
-<WavySlider
-	value={0.35}
-	bufferedValue={0.72}
-	colors={{
-		activeTrackColor: '#ff4b7a',
-		bufferedTrackColor: 'rgba(255, 75, 122, 0.28)',
-		inactiveTrackColor: '#444',
-		thumbColor: '#ff4b7a',
-	}}
-/>
 ```
 
 ## Props
@@ -216,9 +188,3 @@ export function NativeStateExample() {
 | `onValueChange`         | `(value: number) => void`                                  | `undefined` | Worklet callback fired while the value changes.                           |
 | `onValueChangeFinished` | `(value: number) => void`                                  | `undefined` | Worklet callback fired when dragging or tap-seeking finishes.             |
 | `onDragStateChange`     | `(isDragged: boolean) => void`                             | `undefined` | Worklet callback fired when the native drag state changes.                |
-
-## Notes
-
-- Native code only renders the Compose slider and observes native state. Playback-specific animation policy belongs in JavaScript.
-- Shared value props are bridged inside `WavySlider`; consumers do not need to manually create `ObservableState` for common Reanimated animations.
-- `react-native-reanimated` is required because `expo.installOnUIRuntime()` currently depends on the UI runtime pointer installed by Reanimated's runtime decorator.

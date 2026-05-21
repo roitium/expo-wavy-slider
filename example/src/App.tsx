@@ -179,12 +179,15 @@ function BufferedSlider() {
 	const buffered = useSharedValue(0.68)
 
 	useEffect(() => {
-		buffered.set(
-			withTiming(value > 0.75 ? 1 : Math.min(value + 0.4, 0.95), {
-				duration: 500,
-				easing: Easing.out(Easing.cubic),
-			}),
-		)
+		const target = value > 0.75 ? 1 : Math.min(value + 0.4, 0.95)
+		if (target > buffered.value) {
+			buffered.set(
+				withTiming(target, {
+					duration: 500,
+					easing: Easing.out(Easing.cubic),
+				}),
+			)
+		}
 	}, [buffered, value])
 
 	const handleValueChange = useCallback(

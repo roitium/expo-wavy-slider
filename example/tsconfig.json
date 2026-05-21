@@ -6,5 +6,6 @@
       "expo-wavy-slider": ["../src/index"],
       "expo-wavy-slider/*": ["../src/*"],
     },
+    "types": [],
   },
 }

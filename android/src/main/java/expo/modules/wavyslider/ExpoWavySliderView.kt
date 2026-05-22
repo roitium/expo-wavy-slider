@@ -212,7 +212,10 @@ class ExpoWavySliderView(context: Context, appContext: AppContext) : ExpoView(co
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        val child = composeView ?: placeholderView
+        // Only measure composeView if it's actually attached to a window.
+        // Measuring a detached ComposeView triggers ensureCompositionCreated which
+        // calls getWindowRecomposer and crashes with IllegalStateException.
+        val child = composeView?.takeIf { it.isAttachedToWindow } ?: placeholderView
         child.measure(
             MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.EXACTLY)
@@ -221,7 +224,8 @@ class ExpoWavySliderView(context: Context, appContext: AppContext) : ExpoView(co
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
-        val child = composeView ?: placeholderView
+        // Same guard as onMeasure: only layout composeView when it's window-attached.
+        val child = composeView?.takeIf { it.isAttachedToWindow } ?: placeholderView
         child.layout(0, 0, right - left, bottom - top)
     }
 

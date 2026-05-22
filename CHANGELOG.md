@@ -1,3 +1,10 @@
+## [0.4.2](https://github.com/roitium/expo-wavy-slider/compare/v0.4.1...v0.4.2) (2026-05-22)
+
+
+### Bug Fixes
+
+* worklets serializer racing with expo-ui ([5555096](https://github.com/roitium/expo-wavy-slider/commit/5555096190a29ab43f43eb545c3b6d3cb32051d5))
+
 ## [0.4.1](https://github.com/roitium/expo-wavy-slider/compare/v0.4.0...v0.4.1) (2026-05-22)
 
 

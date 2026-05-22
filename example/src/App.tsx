@@ -11,7 +11,6 @@ import {
 	View,
 } from 'react-native'
 import {
-	Easing,
 	useAnimatedReaction,
 	useDerivedValue,
 	useFrameCallback,
@@ -175,51 +174,6 @@ function PlayerLikeSlider() {
 	)
 }
 
-function BufferedSlider() {
-	const [value, setValue] = useState(0.28)
-	const buffered = useSharedValue(0.68)
-
-	useEffect(() => {
-		const target = value > 0.75 ? 1 : Math.min(value + 0.4, 0.95)
-		if (target > buffered.value) {
-			buffered.set(
-				withTiming(target, {
-					duration: 500,
-					easing: Easing.out(Easing.cubic),
-				}),
-			)
-		}
-	}, [buffered, value])
-
-	const handleValueChange = useCallback(
-		(nextValue: number) => {
-			'worklet'
-			const targetBuffered =
-				nextValue > 0.75 ? 1 : Math.min(nextValue + 0.4, 0.95)
-			buffered.set(Math.max(buffered.value, targetBuffered))
-			scheduleOnRN(setValue, nextValue)
-		},
-		[buffered],
-	)
-
-	return (
-		<Section title='Buffered track'>
-			<WavySlider
-				style={styles.slider}
-				value={value}
-				bufferedProgress={buffered}
-				waveLength={0}
-				waveHeight={0}
-				waveVelocity={0}
-				waveThickness={5}
-				trackThickness={5}
-				colors={amberColors}
-				onValueChange={handleValueChange}
-			/>
-		</Section>
-	)
-}
-
 const thumbShapes: WavySliderThumbShape[] = [
 	'default',
 	'circle',
@@ -324,7 +278,6 @@ export default function App() {
 				<Text style={styles.heading}>Wavy Slider</Text>
 				<BasicSlider />
 				<PlayerLikeSlider />
-				<BufferedSlider />
 				<ThumbShapeSlider />
 				<FunSlider />
 			</ScrollView>
@@ -344,13 +297,6 @@ const blueColors = {
 	bufferedTrackColor: 'rgba(103, 209, 255, 0.25)',
 	inactiveTrackColor: '#303846',
 	thumbColor: '#67d1ff',
-}
-
-const amberColors = {
-	activeTrackColor: '#ffbf47',
-	bufferedTrackColor: 'rgba(255, 191, 71, 0.3)',
-	inactiveTrackColor: '#40382a',
-	thumbColor: '#ffbf47',
 }
 
 const greenColors = {

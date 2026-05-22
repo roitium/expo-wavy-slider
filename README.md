@@ -136,7 +136,7 @@ export function AnimatedPlayerSlider({
 >
 > And basically, all these codes were copied from ExpoUI repo : )
 
-`useNativeState(initialValue)` creates an Expo `SharedObject` backed by native state. On Android it is read by Compose as observable state, so assigning `state.value` from a worklet updates the native UI directly.
+`useNativeState(initialValue)` creates an Expo `SharedObject`. On Android it is read by Compose as `MutableState`, so assigning `state.value` from a worklet updates the native UI directly.
 
 You usually do not need this hook when you already have a Reanimated shared value, because `WavySlider` bridges shared values internally.
 

@@ -182,6 +182,7 @@ export function NativeStateExample() {
 | `waveHeight`            | `number \| SharedValue<number> \| ObservableState<number>` | `16`        | Wave height in dp. Set to `0` for a straight slider.                      |
 | `waveVelocity`          | `number \| SharedValue<number> \| ObservableState<number>` | `15`        | Wave velocity in dp per second. Set to `0` to stop movement.              |
 | `waveDirection`         | `'left' \| 'right' \| 'tail' \| 'head'`                    | `'head'`    | Wave movement direction.                                                  |
+| `thumbShape`            | `'default' \| 'circle' \| 'square' \| 'diamond'`           | `'default'` | Shape used for the slider thumb.                                          |
 | `waveThickness`         | `number \| SharedValue<number> \| ObservableState<number>` | `4`         | Active wave stroke thickness in dp.                                       |
 | `trackThickness`        | `number \| SharedValue<number> \| ObservableState<number>` | `4`         | Inactive and buffered track stroke thickness in dp.                       |
 | `incremental`           | `boolean`                                                  | `false`     | Whether wave height gradually increases toward the thumb.                 |

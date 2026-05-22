@@ -108,6 +108,10 @@ class ExpoWavySliderModule : Module() {
                 view.waveDirection = waveDirection
             }
 
+            Prop("thumbShape") { view: ExpoWavySliderView, thumbShape: WavySliderThumbShape ->
+                view.thumbShape = thumbShape
+            }
+
             Prop("waveThickness") { view: ExpoWavySliderView, value: Either<ObservableStateHandle, Float> ->
                 value.setObservableFloat(appContext, { view.waveThicknessState = it }, { view.waveThickness = it })
             }

@@ -51,6 +51,16 @@ export type WavySliderColors = {
 export type WavySliderWaveDirection = 'left' | 'right' | 'tail' | 'head'
 
 /**
+ * Shape used for the slider thumb.
+ *
+ * - `default`: Material 3 default thumb.
+ * - `circle`: Circular thumb.
+ * - `square`: Square thumb.
+ * - `diamond`: Square thumb rotated by 45 degrees, matching the upstream demo.
+ */
+export type WavySliderThumbShape = 'default' | 'circle' | 'square' | 'diamond'
+
+/**
  * A value that can be updated from the UI runtime.
  *
  * Shared values are bridged to an internal ObservableState with Reanimated
@@ -190,6 +200,12 @@ export type WavySliderProps = ViewProps & {
 	 * @default 'head'
 	 */
 	waveDirection?: WavySliderWaveDirection
+	/**
+	 * Shape used for the slider thumb.
+	 *
+	 * @default 'default'
+	 */
+	thumbShape?: WavySliderThumbShape
 	/**
 	 * Stroke thickness for the active wave in dp.
 	 *

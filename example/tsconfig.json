@@ -1,11 +1,11 @@
 {
-  "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "strict": true,
-    "paths": {
-      "expo-wavy-slider": ["../src/index"],
-      "expo-wavy-slider/*": ["../src/*"],
-    },
-    "types": [],
-  },
+	"extends": "expo/tsconfig.base",
+	"compilerOptions": {
+		"strict": true,
+		"paths": {
+			"expo-wavy-slider": ["../src/index"],
+			"expo-wavy-slider/*": ["../src/*"]
+		},
+		"types": []
+	}
 }

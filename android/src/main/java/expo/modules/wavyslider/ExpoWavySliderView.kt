@@ -6,13 +6,18 @@ import android.view.ViewGroup.LayoutParams
 import android.widget.Space
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -21,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -55,6 +61,13 @@ enum class WavySliderWaveDirection(val value: String) : Enumerable {
         TAIL -> WaveDirection.TAIL
         HEAD -> WaveDirection.HEAD
     }
+}
+
+enum class WavySliderThumbShape(val value: String) : Enumerable {
+    DEFAULT("default"),
+    CIRCLE("circle"),
+    SQUARE("square"),
+    DIAMOND("diamond")
 }
 
 @OptimizedRecord
@@ -102,6 +115,50 @@ private fun fractionInRange(start: Float, end: Float, value: Float): Float {
 // Matches Material 3 default Slider track gap: HandleWidth / 2 + ActiveHandleLeadingSpace.
 private val BufferedThumbTrackGapSize = 8.dp
 private val BufferedTrackInsideCornerSize = 2.dp
+private val CustomThumbSize = 18.dp
+private val CircleThumbSize = 20.dp
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun WavySliderThumb(
+    interactionSource: MutableInteractionSource,
+    sliderColors: androidx.compose.material3.SliderColors,
+    sliderEnabled: Boolean,
+    configuredColors: WavySliderColors,
+    thumbShape: WavySliderThumbShape
+) {
+    when (thumbShape) {
+        WavySliderThumbShape.DEFAULT -> SliderDefaults.Thumb(
+            interactionSource = interactionSource,
+            colors = sliderColors,
+            enabled = sliderEnabled
+        )
+
+        WavySliderThumbShape.CIRCLE,
+        WavySliderThumbShape.SQUARE,
+        WavySliderThumbShape.DIAMOND -> {
+            val color = configuredColors.thumbColor.composeOrNull
+                ?: MaterialTheme.colorScheme.primary
+            val modifier = when (thumbShape) {
+                WavySliderThumbShape.CIRCLE -> Modifier
+                    .size(CircleThumbSize)
+                    .background(color, CircleShape)
+
+                WavySliderThumbShape.SQUARE -> Modifier
+                    .size(CustomThumbSize)
+                    .background(color)
+
+                WavySliderThumbShape.DIAMOND -> Modifier
+                    .size(CustomThumbSize)
+                    .rotate(45f)
+                    .background(color)
+
+                WavySliderThumbShape.DEFAULT -> Modifier
+            }
+            Box(modifier)
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 class ExpoWavySliderView(context: Context, appContext: AppContext) : ExpoView(context, appContext) {
@@ -124,6 +181,7 @@ class ExpoWavySliderView(context: Context, appContext: AppContext) : ExpoView(co
     var waveVelocity by mutableFloatStateOf(15.0f)
     var waveVelocityState by mutableStateOf<ObservableState?>(null)
     var waveDirection by mutableStateOf(WavySliderWaveDirection.HEAD)
+    var thumbShape by mutableStateOf(WavySliderThumbShape.DEFAULT)
     var waveThickness by mutableFloatStateOf(4.0f)
     var waveThicknessState by mutableStateOf<ObservableState?>(null)
     var trackThickness by mutableFloatStateOf(4.0f)
@@ -259,6 +317,15 @@ class ExpoWavySliderView(context: Context, appContext: AppContext) : ExpoView(co
                         trackThickness = effectiveTrackThickness,
                         incremental = incremental,
                         animationSpecs = animationSpecs,
+                        thumb = {
+                            WavySliderThumb(
+                                interactionSource = interactionSource,
+                                sliderColors = sliderColors,
+                                sliderEnabled = sliderEnabled,
+                                configuredColors = colors,
+                                thumbShape = thumbShape
+                            )
+                        },
                         track = { sliderState ->
                             Box(modifier = Modifier.fillMaxWidth()) {
                                 SliderDefaults.Track(

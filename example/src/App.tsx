@@ -1,4 +1,5 @@
 import { WavySlider } from 'expo-wavy-slider'
+import type { WavySliderThumbShape } from 'expo-wavy-slider'
 import { useCallback, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import {
@@ -215,8 +216,101 @@ function BufferedSlider() {
 				colors={amberColors}
 				onValueChange={handleValueChange}
 			/>
+		</Section>
+	)
+}
+
+const thumbShapes: WavySliderThumbShape[] = [
+	'default',
+	'circle',
+	'square',
+	'diamond',
+]
+
+function ThumbShapeSlider() {
+	const [value, setValue] = useState(0.5)
+	const [shapeIndex, setShapeIndex] = useState(0)
+	const thumbShape = thumbShapes[shapeIndex] ?? 'default'
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setShapeIndex((index) => (index + 1) % thumbShapes.length)
+		}, 1000)
+		return () => clearInterval(interval)
+	}, [])
+
+	const handleValueChange = useCallback((nextValue: number) => {
+		'worklet'
+		scheduleOnRN(setValue, nextValue)
+	}, [])
+
+	return (
+		<Section title='Thumb shape'>
+			<View style={styles.toolbar}>
+				<Pressable
+					style={styles.button}
+					onPress={() => {
+						setShapeIndex((index) => (index + 1) % thumbShapes.length)
+					}}
+				>
+					<Text style={styles.buttonText}>Shape: {thumbShape}</Text>
+				</Pressable>
+				<Text style={styles.caption}>{Math.round(value * 100)}%</Text>
+			</View>
+			<WavySlider
+				style={styles.slider}
+				value={value}
+				thumbShape={thumbShape}
+				waveLength={24}
+				waveHeight={10}
+				waveVelocity={14}
+				waveThickness={4}
+				trackThickness={4}
+				colors={greenColors}
+				onValueChange={handleValueChange}
+			/>
+		</Section>
+	)
+}
+
+function FunSlider() {
+	const progress = useSharedValue(0.5)
+	const time = useSharedValue(0)
+	const waveLength = useSharedValue(24)
+	const waveHeight = useSharedValue(10)
+	const waveVelocity = useSharedValue(14)
+	const waveThickness = useSharedValue(4)
+	const trackThickness = useSharedValue(4)
+
+	useFrameCallback((frame) => {
+		'worklet'
+		const delta = (frame.timeSincePreviousFrame ?? 0) / 1000
+		time.set(time.value + delta)
+
+		const p = 0.5 + 0.4 * Math.sin(time.value * 1.5)
+		progress.set(p)
+
+		waveLength.set(25 + 15 * Math.sin(time.value * 2.0))
+		waveHeight.set(11 + 9 * Math.cos(time.value * 1.2))
+		waveVelocity.set(30 * Math.sin(time.value * 0.8))
+		waveThickness.set(6 + 4 * Math.sin(time.value * 2.5))
+		trackThickness.set(6 + 4 * Math.cos(time.value * 1.7))
+	})
+
+	return (
+		<Section title='just for fun 🤪'>
+			<WavySlider
+				style={styles.slider}
+				progress={progress}
+				waveLength={waveLength}
+				waveHeight={waveHeight}
+				waveVelocity={waveVelocity}
+				waveThickness={waveThickness}
+				trackThickness={trackThickness}
+				colors={purpleColors}
+			/>
 			<Text style={styles.caption}>
-				Buffered progress stays behind the thumb gap.
+				Watch the waves and thumb flow completely on their own!
 			</Text>
 		</Section>
 	)
@@ -231,6 +325,8 @@ export default function App() {
 				<BasicSlider />
 				<PlayerLikeSlider />
 				<BufferedSlider />
+				<ThumbShapeSlider />
+				<FunSlider />
 			</ScrollView>
 		</View>
 	)
@@ -255,6 +351,20 @@ const amberColors = {
 	bufferedTrackColor: 'rgba(255, 191, 71, 0.3)',
 	inactiveTrackColor: '#40382a',
 	thumbColor: '#ffbf47',
+}
+
+const greenColors = {
+	activeTrackColor: '#67e480',
+	bufferedTrackColor: 'rgba(103, 228, 128, 0.25)',
+	inactiveTrackColor: '#2f3b31',
+	thumbColor: '#67e480',
+}
+
+const purpleColors = {
+	activeTrackColor: '#d6a3ff',
+	bufferedTrackColor: 'rgba(214, 163, 255, 0.35)',
+	inactiveTrackColor: '#524366',
+	thumbColor: '#d6a3ff',
 }
 
 const styles = StyleSheet.create({

@@ -1,9 +1,7 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch: # Allows manual triggering from the GitHub Actions UI
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -35,6 +33,11 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Fix expo-module-scripts permissions
+        # In Unix environments, pnpm symlinks files in node_modules,
+        # which can lose their executable permissions. chmod resolves symlinks automatically.
+        run: chmod -R +x node_modules/expo-module-scripts/bin
 
       - name: Run build
         run: pnpm build

@@ -5,8 +5,12 @@
 import { installOnUIRuntime } from 'expo'
 
 import { worklets } from './utils/ensureWorklets'
+import {
+	EXPO_SHARED_OBJECT_ID_KEY,
+	isWavySliderSharedObject,
+	type WavySliderSharedObject,
+} from './utils/sharedObjectBrand'
 
-type NativeSharedObject = { __expo_shared_object_id__: number }
 type PackedSharedObject = { objectId: number }
 
 let serializerRegistered = false
@@ -15,24 +19,22 @@ function registerSharedObjectSerializer(): void {
 	if (serializerRegistered || !worklets) return
 
 	serializerRegistered = true
-	worklets.registerCustomSerializable<NativeSharedObject, PackedSharedObject>({
+	worklets.registerCustomSerializable<
+		WavySliderSharedObject,
+		PackedSharedObject
+	>({
 		name: 'ExpoWavySliderSharedObject',
-		determine: (value): value is NativeSharedObject => {
+		determine: (value): value is WavySliderSharedObject => {
 			'worklet'
-			return (
-				value != null &&
-				typeof value === 'object' &&
-				'__expo_shared_object_id__' in value &&
-				(value as NativeSharedObject).__expo_shared_object_id__ !== 0
-			)
+			return isWavySliderSharedObject(value)
 		},
 		pack: (value) => {
 			'worklet'
-			return { objectId: value.__expo_shared_object_id__ }
+			return { objectId: value[EXPO_SHARED_OBJECT_ID_KEY] }
 		},
 		unpack: (packed) => {
 			'worklet'
-			const obj = (
+			const sharedObject = (
 				globalThis as typeof globalThis & {
 					expo: {
 						SharedObject: {
@@ -43,7 +45,9 @@ function registerSharedObjectSerializer(): void {
 						}
 					}
 				}
-			).expo.SharedObject.__resolveInWorklet(packed.objectId)
+			).expo.SharedObject
+			// eslint-disable-next-line no-underscore-dangle
+			const obj = sharedObject.__resolveInWorklet(packed.objectId)
 
 			if (
 				typeof obj.getValue === 'function' &&
@@ -61,7 +65,7 @@ function registerSharedObjectSerializer(): void {
 				})
 			}
 
-			return obj as unknown as NativeSharedObject
+			return obj as unknown as WavySliderSharedObject
 		},
 	})
 }

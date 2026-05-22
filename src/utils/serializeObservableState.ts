@@ -1,13 +1,14 @@
 import type { ObservableState } from '../hooks/useNativeState'
 
 import getStateId from './getStateId'
+import { isWavySliderSharedObject } from './sharedObjectBrand'
 
 export type NativeObservableStateReference = { stateId: number }
 
 export function isObservableState<T>(
 	value: unknown,
 ): value is ObservableState<T> {
-	return getStateId(value as object | null | undefined) != null
+	return isWavySliderSharedObject(value)
 }
 
 /**

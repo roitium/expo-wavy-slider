@@ -3,6 +3,7 @@ import { useRef } from 'react'
 
 import ExpoWavySliderModule from '../ExpoWavySliderModule'
 import { worklets } from '../utils/ensureWorklets'
+import { brandWavySliderSharedObject } from '../utils/sharedObjectBrand'
 
 export type ObservableState<T> = SharedObject & {
 	/**
@@ -51,6 +52,7 @@ export default function useNativeState<T>(initialValue: T): ObservableState<T> {
 		const state = new ExpoWavySliderModule.ObservableState({
 			value: initialValueRef.current,
 		})
+		brandWavySliderSharedObject(state)
 		defineValueProperty(state)
 		defineOnChangeProperty(state)
 		return state
@@ -114,6 +116,7 @@ function defineOnChangeProperty(state: NativeObservableState): void {
 			const callback = new ExpoWavySliderModule.WorkletCallback(
 				worklets.createSerializable(fn),
 			)
+			brandWavySliderSharedObject(callback)
 			state.setOnChange(callback)
 		},
 	})

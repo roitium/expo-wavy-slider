@@ -54,6 +54,8 @@ function registerSharedObjectSerializer(): void {
 						return obj.getValue?.()
 					},
 					set(value: unknown) {
+						if (value === undefined) return
+
 						obj.setValue?.({ value })
 					},
 				})

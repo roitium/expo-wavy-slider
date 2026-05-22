@@ -3,6 +3,7 @@ import {
 	isSharedValue,
 	startMapper,
 	stopMapper,
+	useSharedValue,
 	type SharedValue,
 } from 'react-native-reanimated'
 
@@ -23,20 +24,29 @@ export default function useObservableStateAdapter<T>(
 	initialValue: T,
 ): ObservableState<T> | undefined {
 	const sharedValueAdapter = useNativeState(initialValue)
+	const isActive = useSharedValue(false)
 
 	useEffect(() => {
 		if (!value || isObservableState<T>(value)) return
 
+		isActive.set(true)
+
 		const mapperId = startMapper(() => {
 			'worklet'
+			if (!isActive.value) return
+
+			const nextValue = value.value
+			if (nextValue === undefined) return
+
 			// oxlint-disable-next-line react-compiler/react-compiler -- ObservableState is a native shared object; writing .value updates Compose without a React state mutation.
-			sharedValueAdapter.value = value.value
-		}, [value])
+			sharedValueAdapter.value = nextValue
+		}, [value, isActive])
 
 		return () => {
+			isActive.set(false)
 			stopMapper(mapperId)
 		}
-	}, [sharedValueAdapter, value])
+	}, [sharedValueAdapter, value, isActive])
 
 	if (!value) return undefined
 	if (isObservableState<T>(value)) return value

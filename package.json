@@ -1,6 +1,6 @@
 {
 	"name": "expo-wavy-slider",
-	"version": "0.4.2",
+	"version": "0.4.3",
 	"description": "Expo native Android wrapper for the WavySlider Jetpack Compose component.",
 	"keywords": [
 		"ExpoWavySlider",

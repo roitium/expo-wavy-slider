@@ -1,3 +1,10 @@
+## [0.4.3](https://github.com/roitium/expo-wavy-slider/compare/v0.4.2...v0.4.3) (2026-05-22)
+
+
+### Bug Fixes
+
+* SharedObject with id xxx not found in the registry ([d7fb1ce](https://github.com/roitium/expo-wavy-slider/commit/d7fb1cee4a1f303954fb3918a795d62d2dc96d3d))
+
 ## [0.4.2](https://github.com/roitium/expo-wavy-slider/compare/v0.4.1...v0.4.2) (2026-05-22)
 
 

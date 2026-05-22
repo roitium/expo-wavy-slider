@@ -1,3 +1,10 @@
+## [0.4.1](https://github.com/roitium/expo-wavy-slider/compare/v0.4.0...v0.4.1) (2026-05-22)
+
+
+### Bug Fixes
+
+* race condition ([b68dd5f](https://github.com/roitium/expo-wavy-slider/commit/b68dd5fc844a3e73cfef1195acf80b67087bbb84))
+
 # [0.4.0](https://github.com/roitium/expo-wavy-slider/compare/v0.3.0...v0.4.0) (2026-05-22)
 
 

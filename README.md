@@ -1,8 +1,16 @@
 # expo-wavy-slider
 
-Android Expo module that exposes [`ir.mahozad.multiplatform:wavy-slider`](https://github.com/mahozad/wavy-slider) as a React Native view.
+An Android Expo module that exposes [`ir.mahozad.multiplatform:wavy-slider`](https://github.com/mahozad/wavy-slider) as a React Native view.
 
-The native view is implemented with Jetpack Compose. High-frequency values can be driven from Reanimated shared values or from this package's native `ObservableState`, so player progress and wave animations can update without React re-renders.
+> Animated wavy [Material Slider](https://m3.material.io/components/sliders/overview) and progress/seek bar similar to the one used in [**Android 13** media controls](https://www.xda-developers.com/android-13-beta-1-media-controls-animation/).  
+> It has curly, wobbly, squiggly, wiggly, jiggly, wriggly, dancing movements.
+> Some users call it the **sperm**.
+
+### Key Features
+- **High Performance**: Using SharedValue and SharedObject smoothly driven on the UI thread, bypassing React re-renders.
+- **Highly Customizable**: Easily customize wave length, height, velocity, direction, thickness, and colors. (And you can animated most of them all in 60fps by using Reanimated!)
+- **Custom Thumb Shapes**: Support for `circle`, `square`, `diamond`, and standard Material 3 thumbs.
+- **Media-Ready**: Built-in buffered progress support, ideal for audio/video players.
 
 ## Platform Support
 
@@ -189,3 +197,8 @@ export function NativeStateExample() {
 | `onValueChange`         | `(value: number) => void`                                  | `undefined` | Worklet callback fired while the value changes.                           |
 | `onValueChangeFinished` | `(value: number) => void`                                  | `undefined` | Worklet callback fired when dragging or tap-seeking finishes.             |
 | `onDragStateChange`     | `(isDragged: boolean) => void`                             | `undefined` | Worklet callback fired when the native drag state changes.                |
+
+### Callback Rules
+
+> [!IMPORTANT]
+> All callback props (`onValueChange`, `onValueChangeFinished`, and `onDragStateChange`) **must be worklet functions** because they are invoked directly from the UI thread runtime.

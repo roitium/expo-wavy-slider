@@ -252,7 +252,7 @@ function FunSlider() {
 	})
 
 	return (
-		<Section title='just for fun 🤪'>
+		<Section title='🤪'>
 			<WavySlider
 				style={styles.slider}
 				progress={progress}
@@ -263,9 +263,6 @@ function FunSlider() {
 				trackThickness={trackThickness}
 				colors={purpleColors}
 			/>
-			<Text style={styles.caption}>
-				Watch the waves and thumb flow completely on their own!
-			</Text>
 		</Section>
 	)
 }

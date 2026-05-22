@@ -75,6 +75,10 @@ function resolveObservableStateInWorklet(
 	).expo
 
 	const sharedObject = expo?.SharedObject
-	// eslint-disable-next-line no-underscore-dangle
-	return sharedObject?.__resolveInWorklet?.(stateId)
+	try {
+		// eslint-disable-next-line no-underscore-dangle
+		return sharedObject?.__resolveInWorklet?.(stateId)
+	} catch {
+		return undefined
+	}
 }

@@ -1,3 +1,10 @@
+## [0.4.6](https://github.com/roitium/expo-wavy-slider/compare/v0.4.5...v0.4.6) (2026-05-24)
+
+
+### Performance Improvements
+
+* move branding to native layer ([7ec2f41](https://github.com/roitium/expo-wavy-slider/commit/7ec2f41e78d25f672b05d6e819a00f45432a7ae6))
+
 ## [0.4.5](https://github.com/roitium/expo-wavy-slider/compare/v0.4.4...v0.4.5) (2026-05-24)
 
 

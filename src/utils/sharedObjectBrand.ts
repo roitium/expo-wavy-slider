@@ -7,19 +7,6 @@ export type WavySliderSharedObject = {
 	[WAVY_SLIDER_SHARED_OBJECT_BRAND]: true
 }
 
-export function brandWavySliderSharedObject<T extends object>(
-	sharedObject: T,
-): T {
-	Object.defineProperty(sharedObject, WAVY_SLIDER_SHARED_OBJECT_BRAND, {
-		value: true,
-		enumerable: false,
-		configurable: false,
-		writable: false,
-	})
-
-	return sharedObject
-}
-
 export function isWavySliderSharedObject(
 	value: unknown,
 ): value is WavySliderSharedObject {

@@ -2,7 +2,6 @@ import { type SharedObject, useReleasingSharedObject } from 'expo-modules-core'
 
 import ExpoWavySliderModule from '../ExpoWavySliderModule'
 import { worklets } from '../utils/ensureWorklets'
-import { brandWavySliderSharedObject } from '../utils/sharedObjectBrand'
 
 type InstancedSharedObject = InstanceType<typeof SharedObject>
 
@@ -15,10 +14,8 @@ export default function useWorkletProp(
 			return null as unknown as InstancedSharedObject
 		}
 		try {
-			return brandWavySliderSharedObject(
-				new ExpoWavySliderModule.WorkletCallback(
-					worklets.createSerializable(callback),
-				),
+			return new ExpoWavySliderModule.WorkletCallback(
+				worklets.createSerializable(callback),
 			)
 		} catch {
 			throw new Error(

@@ -207,15 +207,26 @@ class ExpoWavySliderView(context: Context, appContext: AppContext) : ExpoView(co
     }
 
     override fun onDetachedFromWindow() {
+        composeView?.let {
+            removeView(it)
+            composeView = null
+        }
+        if (placeholderView.parent == null) {
+            addView(placeholderView)
+        }
         super.onDetachedFromWindow()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        if (!isAttachedToWindow) {
+            setMeasuredDimension(
+                getDefaultSize(suggestedMinimumWidth, widthMeasureSpec),
+                getDefaultSize(suggestedMinimumHeight, heightMeasureSpec)
+            )
+            return
+        }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        // Only measure composeView if it's actually attached to a window.
-        // Measuring a detached ComposeView triggers ensureCompositionCreated which
-        // calls getWindowRecomposer and crashes with IllegalStateException.
-        val child = composeView?.takeIf { it.isAttachedToWindow } ?: placeholderView
+        val child = composeView ?: placeholderView
         child.measure(
             MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.EXACTLY)
@@ -223,9 +234,9 @@ class ExpoWavySliderView(context: Context, appContext: AppContext) : ExpoView(co
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        if (!isAttachedToWindow) return
         super.onLayout(changed, left, top, right, bottom)
-        // Same guard as onMeasure: only layout composeView when it's window-attached.
-        val child = composeView?.takeIf { it.isAttachedToWindow } ?: placeholderView
+        val child = composeView ?: placeholderView
         child.layout(0, 0, right - left, bottom - top)
     }
 
@@ -235,7 +246,7 @@ class ExpoWavySliderView(context: Context, appContext: AppContext) : ExpoView(co
         removeAllViews()
         composeView = ComposeView(context).also { it ->
             it.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-            it.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+            it.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             addView(it)
             it.setContent {
                 Box(

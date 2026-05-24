@@ -2,6 +2,8 @@
 
 An Android Expo module that exposes [`ir.mahozad.multiplatform:wavy-slider`](https://github.com/mahozad/wavy-slider) as a React Native view.
 
+https://github.com/user-attachments/assets/66a530fc-7e13-4dad-b1a1-f744862fe055
+
 > Animated wavy [Material Slider](https://m3.material.io/components/sliders/overview) and progress/seek bar similar to the one used in [**Android 13** media controls](https://www.xda-developers.com/android-13-beta-1-media-controls-animation/).  
 > It has curly, wobbly, squiggly, wiggly, jiggly, wriggly, dancing movements.
 > Some users call it the **sperm**.

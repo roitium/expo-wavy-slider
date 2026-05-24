@@ -1,3 +1,10 @@
+## [0.4.5](https://github.com/roitium/expo-wavy-slider/compare/v0.4.4...v0.4.5) (2026-05-24)
+
+
+### Bug Fixes
+
+* measure before ComposerView attached ([62e7b10](https://github.com/roitium/expo-wavy-slider/commit/62e7b10716f1cfb20b40abf756c5262a05e2cd73))
+
 ## [0.4.4](https://github.com/roitium/expo-wavy-slider/compare/v0.4.3...v0.4.4) (2026-05-22)
 
 

@@ -1,3 +1,10 @@
+## [0.4.7](https://github.com/roitium/expo-wavy-slider/compare/v0.4.6...v0.4.7) (2026-07-04)
+
+
+### Bug Fixes
+
+* support expo57 ([601d4bb](https://github.com/roitium/expo-wavy-slider/commit/601d4bb111b223244d130e448e9824bafaba2235))
+
 ## [0.4.6](https://github.com/roitium/expo-wavy-slider/compare/v0.4.5...v0.4.6) (2026-05-24)
 
 

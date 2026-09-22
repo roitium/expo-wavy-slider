@@ -1,3 +1,5 @@
+## [0.4.8](https://github.com/roitium/expo-wavy-slider/compare/v0.4.7...v0.4.8) (2026-09-22)
+
 ## [0.4.7](https://github.com/roitium/expo-wavy-slider/compare/v0.4.6...v0.4.7) (2026-07-04)
 
 
